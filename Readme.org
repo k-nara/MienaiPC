@@ -1,0 +1,86 @@
+* MienaiPC
+
+=itcfunc.c= implementation for =curses=
+
+MieruPC 用のプログラムをネイティブコンパイル (シュミレータなしで実行)。
+
+** 必要なもの
+
+- =curses= ライブラリ
+
+  Linux や Windows (Cygwin) では =ncurses=, Windows (MinGW) では
+  =pdcurses= などが使える。
+
+  : apt-get install libncurses    [Ubuntu]
+  : mingw-get install libpdcurses [MinGW]
+
+** 使い方
+
+1. =itcfunc.h=, =itcfunc.c= をコピー (本家 MieruPC 用の =itcfunc= を上
+   書き)
+
+2. キー入力やカウンタの参照を =key_get= や =counter_get= に置き換える
+
+   : [Before]
+   : char key = *(char*)0x0110;
+   : [After]
+   : char key = key_get();
+
+   : [Before]
+   : int counter = *(int*)0x010c;
+   : [After]
+   : int counter = counter_get();
+
+   ※ MieruPC でも MienaiPC でも実行できるようにプログラムを書きたい場
+   合は、MienaiPC のときだけ定義されるフラグ =MIENAI_FLAG= を利用する：
+
+   : #ifdef MIENAI_FLAG
+   : char key_get(){ return *(char*)0x0110; }
+   : int counter_get(){ return *(int*)0x010c; }
+   : #endif
+
+3. コンパイル (=curses= を利用するので、 =-lncurses=, =-lpdcurses= など
+   のオプションが必要かも)
+
+   : gcc *.c -lncurses
+
+実行を停止する場合は =q= を入力。
+
+** MieruPC との違い
+
+- キー入力・カウンタの取得方法
+
+  アドレス指定で直接読みに行くのでなく、関数 =key_get=, =counter_get=
+  を呼ぶ。
+
+- 色を指定するときの番号
+
+  色を直接番号で指定している場合は、 =COL_RED= などのマクロ使うように直
+  す。
+
+- 色の種類
+
+  たとえば =COL_DARKRED= と =COL_RED= は同じ色になる (本家のシミュレー
+  タと同じ)。
+
+- 裏画面は未実装
+
+  =setshowpage=, =setdrawpage=, =copypage=, =settransparent= は未実装
+  (本家のシュミレータとたぶん同じ)。
+
+** サンプルゲームの遊び方
+
+３Ｄ (風) の迷路です。
+
+- メニュー画面
+  - =W=, =S= :: 項目選択
+  - =A=, =D= :: 値の変更
+  - =J=, =K= :: 決定
+
+- ゲーム画面
+  - =W= :: 前進
+  - =S= :: 後退
+  - =A=, =D= :: その場で回転
+  - =J=, =K= :: リタイア
+
+４０回以内の前進・後退で迷路の端から端まで移動できればクリア。

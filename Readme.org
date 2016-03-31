@@ -1,6 +1,6 @@
 * MienaiPC
 
-=itcfunc.c= implementation for =curses=
+=itcfunc.c= implementation on =curses=
 
 MieruPC 用のプログラムをネイティブコンパイル (シュミレータなしで実行)。
 
@@ -8,8 +8,8 @@ MieruPC 用のプログラムをネイティブコンパイル (シュミレー�
 
 - =curses= ライブラリ
 
-  Linux や Windows (Cygwin) では =ncurses=, Windows (MinGW) では
-  =pdcurses= などが使える。
+  Linux や Cygwin では =ncurses=, Windows (MinGW) では =pdcurses= など
+  が使える。
 
   : apt-get install libncurses    [Ubuntu]
   : mingw-get install libpdcurses [MinGW]
@@ -34,7 +34,7 @@ MieruPC 用のプログラムをネイティブコンパイル (シュミレー�
    ※ MieruPC でも MienaiPC でも実行できるようにプログラムを書きたい場
    合は、MienaiPC のときだけ定義されるフラグ =MIENAI_FLAG= を利用する：
 
-   : #ifdef MIENAI_FLAG
+   : #ifndef MIENAI_FLAG
    : char key_get(){ return *(char*)0x0110; }
    : int counter_get(){ return *(int*)0x010c; }
    : #endif
@@ -58,7 +58,7 @@ MieruPC 用のプログラムをネイティブコンパイル (シュミレー�
   色を直接番号で指定している場合は、 =COL_RED= などのマクロ使うように直
   す。
 
-- 色の種類
+- 色の種類が少ない
 
   たとえば =COL_DARKRED= と =COL_RED= は同じ色になる (本家のシミュレー
   タと同じ)。
@@ -70,7 +70,7 @@ MieruPC 用のプログラムをネイティブコンパイル (シュミレー�
 
 ** サンプルゲームの遊び方
 
-３Ｄ (風) の迷路です。
+３Ｄ (風) の迷路。
 
 - メニュー画面
   - =W=, =S= :: 項目選択

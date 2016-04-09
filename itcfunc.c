@@ -21,15 +21,13 @@ int lcd_ttyopen(int rotate)
     noecho();
     curs_set(0);
 
-    init_pair(COL_RED,     COLOR_RED,     COLOR_BLACK);
-    init_pair(COL_GREEN,   COLOR_GREEN,   COLOR_BLACK);
-    init_pair(COL_YELLOW,  COLOR_YELLOW,  COLOR_BLACK);
-    init_pair(COL_BLUE,    COLOR_BLUE,    COLOR_BLACK);
-    init_pair(COL_MAGENTA, COLOR_MAGENTA, COLOR_BLACK);
-    init_pair(COL_CYAN,    COLOR_CYAN,    COLOR_BLACK);
-    init_pair(COL_WHITE,   COLOR_WHITE,   COLOR_BLACK);
-    init_pair(COL_BLACK,   COLOR_BLACK,   COLOR_BLACK);
-    bkgd(COLOR_PAIR(COL_WHITE));
+    init_pair(1, COLOR_YELLOW,  COLOR_BLACK);
+    init_pair(2, COLOR_MAGENTA, COLOR_BLACK);
+    init_pair(3, COLOR_RED,     COLOR_BLACK);
+    init_pair(4, COLOR_CYAN,    COLOR_BLACK);
+    init_pair(5, COLOR_GREEN,   COLOR_BLACK);
+    init_pair(6, COLOR_BLUE,    COLOR_BLACK);
+    init_pair(7, COLOR_BLACK,   COLOR_BLACK);
 
     erase();
     refresh();
@@ -39,7 +37,11 @@ int lcd_ttyopen(int rotate)
 
 void lcd_ttyclose() { endwin(); }
 
-void lcd_setcolor(int color) { attrset(COLOR_PAIR(color)); }
+void lcd_setcolor(int color)
+{
+    color = ((color & 0x80) >> 5) ^ ((color & 0x10) >> 3) ^ ((color & 0x02) >> 1) ^ 0x7;
+    attrset(COLOR_PAIR(color));
+}
 
 void lcd_locate(int x, int y) { move(y, x); }
 
